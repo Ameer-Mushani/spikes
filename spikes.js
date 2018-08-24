@@ -388,7 +388,7 @@ var alSpikes = [];
 var alLocs = [];
 function setup() {
    //font = loadFont("Sans Serif", 40);    
-   Original = loadFont("data/Lucida Sans Regular.ttf");  
+   Original = loadFont("data/Lucida-Sans-Regular.ttf");  
   // textFont(font, 10);
   // frame.requestFocus();
   cBack = color('#E0DCC5');

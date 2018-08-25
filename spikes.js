@@ -1,10 +1,9 @@
-//TODO: enable shop , fix jumping , fix the code menu
+//TODO: enable shop - allow for switching color , fix jumping(what's wrong wit jumping??) , fix the code menu
 function Ball(_fX, _fY, _fW, _fH) {
-  var  fDx, fDy;
+  var fDx, fDy;
+  var cBall;
   var isSpecial;
   var nSpecial, nEndAnimation = 0;
-  var imgBall;
-  var sImg;
   this.fX = _fX;
   this.fY = _fY;
   this.fW = _fW;
@@ -15,8 +14,8 @@ function Ball(_fX, _fY, _fW, _fH) {
   if (isSpecial) {
     imgBall = loadImage(sImg);
   }
-  this.update= function(_fDx, _fDy) {
-    this.fDx = _fDx; 
+  this.update = function (_fDx, _fDy) {
+    this.fDx = _fDx;
     this.fDy = _fDy;
     this.fX += this.fDx;
 
@@ -26,14 +25,14 @@ function Ball(_fX, _fY, _fW, _fH) {
     this.fY = constrain(this.fY, nRad, height - nRad);
     this.draw();
   }
-  
+
   this.draw = function () {
     imageMode(CENTER);
     noStroke();
     if (isSpecial) {
       specialDraw();
     } else {
-      fill(cBall);
+      fill(this.cBall);
       ellipse(this.fX, this.fY, this.fW, this.fH);
     }
   }
@@ -72,7 +71,7 @@ function Ball(_fX, _fY, _fW, _fH) {
   this.specialDraw = function () {
     switch (nSpecial) {
       case 1:
-        image(imgBall, this.fX, this.fY);
+        image(this.imgBall, this.fX, this.fY);
         break;
       case 2:
         noFill();
@@ -81,8 +80,8 @@ function Ball(_fX, _fY, _fW, _fH) {
         noStroke();
     }
   }
-  this.setImage = function () {
-    imgBall = loadImage(sImg);
+  this.setImage = function (imgPath) {
+    this.imgBall = loadImage(imgPath);
   }
   this.reset = function () {
     this.fX = width / 2;
@@ -354,12 +353,137 @@ function Spike(_fLoc, _isLeft) {
     }
   }
 }
+function Shop() {
+  var skin;
+  var arSkins = [];
+  this.imgBall = loadImage("data/dennis.png");
+  arSkins[0] = new Skin(15, 60, 180, color("#f92d4f"), 64, 0, false, 0, "");
+  arSkins[1] = new Skin(215, 60, 180, color("#2B8665"), 64, 0, false, 0, "");
+  arSkins[2] = new Skin(415, 60, 180, color("#6910E0"), 64, 0, false, 0, "");
+  arSkins[3] = new Skin(615, 60, 180, color("#185D71"), 64, 0, false, 0, "");
+  arSkins[4] = new Skin(815, 60, 180, color("#2df9d7"), 64, 0, false, 0, "");
+  arSkins[5] = new Skin(1015, 60, 180, color("#0B8B95"), 64, 0, false, 0, "");
+  arSkins[6] = new Skin(15, 260, 180, color("#7E99D3"), 64, 0, false, 0, "");
+  arSkins[7] = new Skin(215, 260, 180, color("#37D883"), 64, 0, false, 0, "");
+  arSkins[8] = new Skin(415, 260, 180, color("#0B9B95"), 64, 0, false, 0, "");
+  arSkins[9] = new Skin(615, 260, 180, color("#708155"), 64, 0, false, 0, "");
+  arSkins[10] = new Skin(815, 260, 180, color("#198FBC"), 64, 0, false, 0, "");
+  arSkins[11] = new Skin(1015, 260, 180, color("#7E1CE8"), 64, 0, false, 0, "");
+  arSkins[12] = new Skin(15, 460, 180, color(" #a59e9e"), 64, 0, true, 2, "");
+  arSkins[13] = new Skin(215, 460, 180, color("#F76C1B"), 64, 0, false, 0, "");
+  arSkins[14] = new Skin(415, 460, 180, color("#0F1317"), 64, 0, false, 0, "");
+  arSkins[15] = new Skin(615, 460, 180, color(" #9FA9B7"), 64, 0, false, 0, "");
+  arSkins[16] = new Skin(815, 460, 180, color("#D88CB9"), 64, 0, false, 0, "");
+  arSkins[17] = new Skin(1015, 460, 180, color("#F50290"), 64, 0, false, 0, "");
+  arSkins[18] = new Skin(15, 660, 180, color(" #a59e9e"), 64, 0, true, 1, "data/fidget.png");
+  arSkins[19] = new Skin(215, 660, 180, color("#a59e9e"), 64, 0, true, 1, "data/rainbow.png");
+  arSkins[20] = new Skin(415, 660, 180, color("#a59e9e"), 64, 0, true, 1, "data/camo.png");
+  arSkins[21] = new Skin(615, 660, 180, color("#a59e9e"), 64, 0, true, 1, "data/flappybird.png");
+  arSkins[22] = new Skin(815, 660, 180, color("#a59e9e"), 64, 0, true, 1, "data/dennis.png");
+  arSkins[23] = new Skin(1015, 660, 180, color("#a59e9e"), 64, 0, true, 1, "data/Bird.png");
+
+  this.run = function () {
+    imageMode(CENTER);
+    background(cBack);
+    //javascript for each equivalent
+    for (skin of arSkins) {
+      skin.update();
+    }
+    drawRoof(false);
+    skin = arSkins[0];
+    if (skin.fRx <= 15) {
+      for (skin of arSkins) {
+        if (keyPressed == true) {
+          if (keyCode == LEFT) {
+            skin.fRx += 10;
+          }
+        }
+      }
+    }
+    skin = arSkins[23];
+    if (skin.fRx >= 402) {
+      for (skin of arSkins) {
+        if (keyPressed == true) {
+          if (keyCode == RIGHT) {
+            skin.fRx -= 10;
+          }
+        }
+      }
+    }
+  }
+}
+function Skin(_fRx, _fRy, _fLength, _cBall, _fDiam, _fPrice, _isSpecial, _nSpecial, _sImg) {
+  var fRx = _fRx;
+  var fRy = _fRy;
+  var fLength = _fLength;
+  var cBall = _cBall;
+  var fDiam = _fDiam;
+  var fPrice = _fPrice; // not yet implemented
+  var isSpecial = _isSpecial;
+  var nSpecial = _nSpecial;
+  var sImg = _sImg;
+  var fBx = fRx + (fLength / 2);
+  var fBy = fRy + (fLength / 2);
+  if (isSpecial == 1) {
+    var imgBall = loadImage(sImg);
+    imageMode(CENTER);
+  }
+  this.update = function () {
+    fBx = fRx + (fLength / 2);
+    fBy = fRy + (fLength / 2);
+    fill(255);
+    rect(fRx, fRy, fLength, fLength);
+    if (isSpecial) {
+      this.specialDraw();
+    } else {
+      fill(cBall);
+      ellipse(fBx, fBy, fDiam, fDiam);
+    }
+    if (mouseIsPressed) {
+      if (this.isClicked()) {
+        ball.cBall = cBall;
+        if (isSpecial) {
+          ball.isSpecial = isSpecial;
+          ball.nSpecial = nSpecial;
+          ball.sImg = sImg;
+          ball.setImage(sImg);
+        } else {
+          ball.isSpecial = false;
+        }
+      }
+    }
+  }
+  this.specialDraw = function () {
+    switch (nSpecial) {
+      case 1:
+        image(imgBall, fBx, fBy);
+        break;
+      case 2:
+        noFill();
+        stroke(50);
+        ellipse(fBx, fBy, fDiam, fDiam);
+        noStroke();
+    }
+  }
+
+  
+  this.isClicked = function () {
+    var fXDist = mouseX - fBx;
+    var fYDist = mouseY - fBy;
+    var fDist = sqrt((fXDist * fXDist) + (fYDist * fYDist));
+    if (fDiam / 2 > fDist) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
 //sound code
 //import ddf.minim.*;
 // Minim minim;
 // AudioPlayer soundexplosion, soundsadviolin, soundbob, soundShop, soundDeath, soundJump, soundCoin, soundAmeer;
 var sText = "code", sInput = "Enter The Code";
-var  font, Original;
+var font, Original;
 // p5.Image = img, imgCircle;
 //PFont Bold, Original;
 // String[] info;
@@ -369,7 +493,7 @@ var  font, Original;
 var btnBack;
 var btnMute, btnBackToHomeScreen, btnShop, btnSecret, btnInfo, btnFreeCoins, imgspacebar, btnBackArrow, btnInstagram, btnCoinsOn;
 var ball;
-// Shop shop;
+var shop;
 var s;
 var coin, GameOverCoin;
 var nRad, nrunAnimation = 0, nFadeColour = 250, nAnimDY, nControlAnimation, nSpawnCoin = 0, ncoinvalue = 1; //For "+1" fade animation
@@ -381,18 +505,18 @@ var nCoin = 0;
 var nCount;
 var fLoc;
 var isLeft, coinOn, isMuted = false;
-var cBack, cBall, cSpike;
+var cBack,cSpike// cBall ;
 // ArrayList<Spike> alSpikes= new ArrayList<Spike>();
 // ArrayList<Integer> alLocs= new ArrayList<Integer>();
 var alSpikes = [];
 var alLocs = [];
 function setup() {
-   //font = loadFont("Sans Serif", 40);    
-   Original = loadFont("data/Lucida-Sans-Regular.ttf");  
+  //font = loadFont("Sans Serif", 40);    
+  Original = loadFont("data/Lucida-Sans-Regular.ttf");
   // textFont(font, 10);
   // frame.requestFocus();
   cBack = color('#E0DCC5');
-  cBall = color('#f92d4f');
+  
   cSpike = color('#A59E9E');
   smooth();
   frameRate(30);
@@ -425,7 +549,8 @@ function setup() {
   // arHighScore = loadStrings("score.txt");
   nRad = 32;
   ball = new Ball(width / 2, height / 2, nRad * 2, nRad * 2);
-  // shop = new Shop();
+  ball.cBall = color('#f92d4f');
+  shop = new Shop();
   ball.fDx = 14;
   nScore = 0;
   nStart = 1;
@@ -495,7 +620,7 @@ function draw() {
       alSpikes = [];
       alLocs = [];
       if (nScore < 5) {
-       // randomSpikes(3);
+        randomSpikes(3);
       } else if (nScore < 15) {
         randomSpikes(4);
       } else if (nScore < 20) {
@@ -562,7 +687,7 @@ function draw() {
     ellipse(width / 2, height / 2, 300, 300);
     textSize(100);
     nOpac += 10;
-    fill(cBall, nOpac);
+    fill(ball.cBall, nOpac);
     rect(100, 250, 400, 150, 20);
     fill(color('#ffffff'));
     rectMode(CORNERS);
@@ -579,7 +704,7 @@ function draw() {
 
     textSize(44);
     text("POINTS", width / 2 - 77, 380);
-    fill(cBall, nOpac);
+    fill(ball.cBall, nOpac);
     rectMode(CORNER);
     rect(100, 410, 400, 90, 20);
     rect(100, 510, 400, 140, 20);
@@ -616,20 +741,20 @@ function draw() {
     }
   }
 
-  // if (nMode == 5) {
-  //   shop.run();
+  if (nMode == 5) {
+    shop.run();
 
-  //   soundShop.play();
-  //   soundbob.pause();
-  //   soundAmeer.pause();
-  //   soundsadviolin.pause();
-  //   btnBackArrow.update();
-  //   fill(color('#050205'));
-  //   text("Use Arrow Keys To Scroll", 0, 887);
-  // } else {
-  //   soundShop.pause();
-  //   soundShop.rewind();
-  // }
+    // soundShop.play();
+    // soundbob.pause();
+    // soundAmeer.pause();
+    // soundsadviolin.pause();
+    btnBackArrow.update();
+    fill(color('#050205'));
+    text("Use Arrow Keys To Scroll", 0, 887);
+  } else {
+    // soundShop.pause();
+    // soundShop.rewind();
+  }
 
   if (nMode == 6) {
     gameBackground();
@@ -909,7 +1034,7 @@ function randomSpikes(nAmnt) {
   for (var i = 0; i < nAmnt; i++) {
     fLoc = random(11);
     nLoc = int(fLoc);
-    while(containsLocation(nLoc, alLocs)){
+    while (containsLocation(nLoc, alLocs)) {
       fLoc = random(11);
       nLoc = int(fLoc);
     }
@@ -936,7 +1061,7 @@ function randomSpikes(nAmnt) {
     alSpikes.push(s);
   }
 }
-function containsLocation(nLoc, Locs){
+function containsLocation(nLoc, Locs) {
   contains = false;
   for (let index = 0; index < alLocs.length; index++) {
     if (Locs[index] == nLoc) {

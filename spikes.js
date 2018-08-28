@@ -1,7 +1,6 @@
 //TODO: enable shop - allow for switching color , fix jumping(what's wrong wit jumping??) , fix the code menu
-function Ball(_fX, _fY, _fW, _fH) {
+function Ball(_fX, _fY, _fW, _fH,) {
   var fDx, fDy;
-  var cBall;
   var isSpecial;
   var nSpecial, nEndAnimation = 0;
   this.fX = _fX;
@@ -10,6 +9,7 @@ function Ball(_fX, _fY, _fW, _fH) {
   this.fH = _fH;
   this.fDy = 7;
   this.fX = constrain(this.fX, nRad, width - nRad);
+  var imgBall;
   isSpecial = false;
   if (isSpecial) {
     imgBall = loadImage(sImg);
@@ -30,9 +30,9 @@ function Ball(_fX, _fY, _fW, _fH) {
     imageMode(CENTER);
     noStroke();
     if (isSpecial) {
-      specialDraw();
+      this.specialDraw();
     } else {
-      fill(this.cBall);
+      fill(cBall);
       ellipse(this.fX, this.fY, this.fW, this.fH);
     }
   }
@@ -71,7 +71,7 @@ function Ball(_fX, _fY, _fW, _fH) {
   this.specialDraw = function () {
     switch (nSpecial) {
       case 1:
-        image(this.imgBall, this.fX, this.fY);
+        image(imgBall, this.fX, this.fY);
         break;
       case 2:
         noFill();
@@ -80,8 +80,10 @@ function Ball(_fX, _fY, _fW, _fH) {
         noStroke();
     }
   }
-  this.setImage = function (imgPath) {
-    this.imgBall = loadImage(imgPath);
+  this.setImage = function (imgPath, _nSpecial) {
+    isSpecial = true;
+    nSpecial = _nSpecial;
+    imgBall = loadImage(imgPath);
   }
   this.reset = function () {
     this.fX = width / 2;
@@ -412,11 +414,11 @@ function Shop() {
     }
   }
 }
-function Skin(_fRx, _fRy, _fLength, _cBall, _fDiam, _fPrice, _isSpecial, _nSpecial, _sImg) {
+function Skin(_fRx, _fRy, _fLength, _color, _fDiam, _fPrice, _isSpecial, _nSpecial, _sImg) {
   var fRx = _fRx;
   var fRy = _fRy;
   var fLength = _fLength;
-  var cBall = _cBall;
+  var color = _color;
   var fDiam = _fDiam;
   var fPrice = _fPrice; // not yet implemented
   var isSpecial = _isSpecial;
@@ -436,17 +438,17 @@ function Skin(_fRx, _fRy, _fLength, _cBall, _fDiam, _fPrice, _isSpecial, _nSpeci
     if (isSpecial) {
       this.specialDraw();
     } else {
-      fill(cBall);
+      fill(color);
       ellipse(fBx, fBy, fDiam, fDiam);
     }
     if (mouseIsPressed) {
       if (this.isClicked()) {
-        ball.cBall = cBall;
+        cBall = color;
         if (isSpecial) {
-          ball.isSpecial = isSpecial;
-          ball.nSpecial = nSpecial;
-          ball.sImg = sImg;
-          ball.setImage(sImg);
+          // ball.isSpecial = isSpecial;
+          // ball.nSpecial = nSpecial;
+          // ball.sImg = sImg;
+          ball.setImage(sImg, nSpecial);
         } else {
           ball.isSpecial = false;
         }
@@ -516,7 +518,7 @@ function setup() {
   // textFont(font, 10);
   // frame.requestFocus();
   cBack = color('#E0DCC5');
-  
+  cBall = color('#f92d4f');
   cSpike = color('#A59E9E');
   smooth();
   frameRate(30);
@@ -549,7 +551,6 @@ function setup() {
   // arHighScore = loadStrings("score.txt");
   nRad = 32;
   ball = new Ball(width / 2, height / 2, nRad * 2, nRad * 2);
-  ball.cBall = color('#f92d4f');
   shop = new Shop();
   ball.fDx = 14;
   nScore = 0;
@@ -687,7 +688,7 @@ function draw() {
     ellipse(width / 2, height / 2, 300, 300);
     textSize(100);
     nOpac += 10;
-    fill(ball.cBall, nOpac);
+    fill(cBall, nOpac);
     rect(100, 250, 400, 150, 20);
     fill(color('#ffffff'));
     rectMode(CORNERS);
@@ -704,7 +705,7 @@ function draw() {
 
     textSize(44);
     text("POINTS", width / 2 - 77, 380);
-    fill(ball.cBall, nOpac);
+    fill(cBall, nOpac);
     rectMode(CORNER);
     rect(100, 410, 400, 90, 20);
     rect(100, 510, 400, 140, 20);

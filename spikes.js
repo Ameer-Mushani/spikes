@@ -152,9 +152,17 @@ function ButtonImg(_sFile, _fX, _fY, _nW, _nH) {
       return false;
     }
   }
+  this.isTouched = function () {
+    if ((touchX >= fX && touchX <= fX + nW && touchY >= fY && touchY <= fY + nH)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
+
 function Coin(_sFile, _fX, _fY, _fW, _fH) {
-  var isLeft;
+  var isLeft = false;
   var fX, fY, fDx, fDy;
   var fW, fH;
   var sFile;
@@ -180,7 +188,7 @@ function Coin(_sFile, _fX, _fY, _fW, _fH) {
       if (this.isHit()) {
         // soundCoin.play();
         // soundCoin.rewind();
-        this.isLeft = !this.isLeft;
+        isLeft = !isLeft;
         this.randBitcoin();
         nCoin += 1;
         nrunAnimation = 1;
@@ -233,23 +241,23 @@ function Spike(_fLoc, _isLeft) {
   var fLoc;
   var nEndAnimation;
 
-  this.isLeft = _isLeft;
-  this.fLoc = _fLoc;
-  this.fY = 75;
-  this.fY += this.fLoc * 75;
-  if (this.isLeft) {
-    this.fX = 0;
-    this.v1 = new createVector(-35, this.fY - 39);
-    this.v2 = new createVector(-35, this.fY + 39);
+  var isLeft = _isLeft;
+  fLoc = _fLoc;
+  fY = 75;
+  fY += fLoc * 75;
+  if (isLeft) {
+    fX = 0;
+    v1 = new createVector(-35, fY - 39);
+    v2 = new createVector(-35, fY + 39);
   }
-  if (!this.isLeft) {
-    this.fX = 600;
-    this.v1 = new createVector(635, this.fY - 39);
-    this.v2 = new createVector(635, this.fY + 39);
+  if (!isLeft) {
+    fX = 600;
+    v1 = new createVector(635, fY - 39);
+    v2 = new createVector(635, fY + 39);
   }
 
   this.update = function () {
-    if (this.ballLine(nRad * 2, this.v1.x, this.v1.y, this.fX, this.fY) == true) {
+    if (this.ballLine(nRad * 2, v1.x, v1.y, fX, fY) == true) {
       // soundDeath.play();
       // soundDeath.rewind();
       // if (ball.sImg == "bomb.png") {
@@ -272,7 +280,7 @@ function Spike(_fLoc, _isLeft) {
       nMode = 4;
 
     }
-    if (this.ballLine(nRad * 2, this.v2.x, this.v2.y, this.fX, this.fY) == true) {
+    if (this.ballLine(nRad * 2, v2.x, v2.y, fX, fY) == true) {
       // soundDeath.play();
       // soundDeath.rewind();
       // if (ball.sImg == "bomb.png") {
@@ -295,21 +303,21 @@ function Spike(_fLoc, _isLeft) {
       nMode = 4;
 
     }
-    if (this.isLeft) {
-      if (this.fX < 35) {
-        this.v1.x += 2;
-        this.v2.x += 2;
-        this.fX += 2;
+    if (isLeft) {
+      if (fX < 35) {
+        v1.x += 2;
+        v2.x += 2;
+        fX += 2;
       }
     } else {
-      if (this.fX > 565) {
-        this.v1.x -= 2;
-        this.v2.x -= 2;
-        this.fX -= 2;
+      if (fX > 565) {
+        v1.x -= 2;
+        v2.x -= 2;
+        fX -= 2;
       }
     }
     fill(cSpike);
-    triangle(this.v1.x, this.v1.y, this.fX, this.fY, this.v2.x, this.v2.y);
+    triangle(v1.x, v1.y, fX, fY, v2.x, v2.y);
   }
   this.ballLine = function (fD, fLineX1, fLineY1, fLineX2, fLineY2) {
     var fDistX, fDistY, fLineLength, fRad, fClosestX, fClosestY;
@@ -326,7 +334,7 @@ function Spike(_fLoc, _isLeft) {
     fClosestY = fLineY1 + fRad * (fLineY2 - fLineY1);    //if (isLeft == true) {
 
     //Constrain the cloest coordinates so it only stays on the line segment and not infinite  
-    if (this.isLeft == true) {
+    if (isLeft == true) {
       fClosestX = constrain(fClosestX, fLineX1, fLineX2);
     } else {
       fClosestX = constrain(fClosestX, fLineX2, fLineX1);
@@ -551,7 +559,7 @@ function setup() {
   btnMute = new ButtonImg("data/soundicon.png", 500, 463, 60, 60);
   // imgCircle = loadImage("nocoinscircle.png");
 
-   info = loadStrings("data/info.txt");
+  info = loadStrings("data/info.txt");
   // arHighScore = loadStrings("score.txt");
   nRad = 32;
   ball = new Ball(width / 2, height / 2, nRad * 2, nRad * 2);
@@ -801,7 +809,7 @@ function resetGame() {
   ncoinvalue = 1;
   nSpawnCoin = 0;
   coin.fX = 100;
-  coin.isLeft = true;
+  coin.isLeft = false;
   nrunAnimation = 0;
   ball.reset();
   isLeft = false;
@@ -855,22 +863,22 @@ function mousePressed() {
         nFreeCoins = 0;
       }
     }
-    if (btnInfo.isClicked()) {
+    else if (btnInfo.isClicked()) {
       nMode = 6;
       if (nFreeCoins != 23) {
         nFreeCoins = 0;
       }
     }
-    if (btnInstagram.isClicked()) {
+    else if (btnInstagram.isClicked()) {
       window.open("https://www.instagram.com/ameericle_/");
     }
-    if (btnFreeCoins.isClicked()) {
+    else if (btnFreeCoins.isClicked()) {
       nFreeCoins++;
     }
-    if (btnSecret.isClicked()) {
+    else if (btnSecret.isClicked()) {
       nMode = 7;
     }
-    if (btnMute.isClicked()) {
+    else if (btnMute.isClicked()) {
       isMuted = !isMuted;
     }
   }
@@ -893,25 +901,59 @@ function mousePressed() {
 }
 function touchStarted() {
   if (nMode == 1) {
-    resetGame();
-    nMode = 3;
-    if (nFreeCoins != 23) {
-      nFreeCoins = 0;
+    if (btnShop.isTouched()) {
+      nMode = 5;
+      if (nFreeCoins != 23) {
+        nFreeCoins = 0;
+      }
     }
-  }
-  if (nMode == 3) {
-    ball.fDy = -22;
-  }
-  if (nMode == 4) {
-    //saveStrings("score.txt", arHighScore);
-    //arHighScore = loadStrings("score.txt");
-    textSize(100);
-    nScore = 0;
-    ball.fX = width / 2;
-    ball.fY = height / 2;
-    nOpac = 0;
-    nMode = 1;
+    else if (btnInfo.isTouched()) {
+      nMode = 6;
+      if (nFreeCoins != 23) {
+        nFreeCoins = 0;
+      }
+    }
+    else if (btnInstagram.isTouched()) {
+      window.open("https://www.instagram.com/ameericle_/");
+    }
+    else if (btnFreeCoins.isTouched()) {
+      nFreeCoins++;
+    }
+    else if (btnMute.isTouched()) {
+      isMuted = !isMuted;
+    }
+    else {
+      resetGame();
+      nMode = 3;
+      if (nFreeCoins != 23) {
+        nFreeCoins = 0;
+      }
+    }
 
+    if (nMode == 3) {
+      ball.fDy = -22;
+    }
+    if (nMode == 4) {
+      //saveStrings("score.txt", arHighScore);
+      //arHighScore = loadStrings("score.txt");
+      textSize(100);
+      nScore = 0;
+      ball.fX = width / 2;
+      ball.fY = height / 2;
+      nOpac = 0;
+      nMode = 1;
+
+    }
+    if (nMode == 5) {
+      if (btnBackArrow.isTouched()) {
+        nMode = 1;
+      }
+    }
+    if (nMode == 6) {
+      if (btnBackArrow.isTouched()) {
+        nMode = 1;
+      }
+    }
   }
 }
 function keyPressed() {

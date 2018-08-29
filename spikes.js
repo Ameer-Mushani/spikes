@@ -1,5 +1,5 @@
-//TODO: enable shop - allow for switching color , fix jumping(what's wrong wit jumping??) , fix the code menu
-function Ball(_fX, _fY, _fW, _fH,) {
+//TODO: enable scrolling in shop,fix spike spawn locations, fix jumping(what's wrong wit jumping??) , fix the code menu
+function Ball(_fX, _fY, _fW, _fH, ) {
   var fDx, fDy;
   var isSpecial;
   var nSpecial, nEndAnimation = 0;
@@ -394,9 +394,10 @@ function Shop() {
     drawRoof(false);
     skin = arSkins[0];
     if (skin.fRx <= 15) {
+      console.log("test");
       for (skin of arSkins) {
-        if (keyPressed == true) {
-          if (keyCode == LEFT) {
+        if (keyIsPressed === true) {
+          if (keyCode === LEFT_ARROW) {
             skin.fRx += 10;
           }
         }
@@ -404,9 +405,12 @@ function Shop() {
     }
     skin = arSkins[23];
     if (skin.fRx >= 402) {
+      console.log("1");
       for (skin of arSkins) {
-        if (keyPressed == true) {
-          if (keyCode == RIGHT) {
+        if (keyIsPressed === true) {
+          console.log("2");
+          if (keyCode === RIGHT_ARROW) {
+            console.log("RIGHT");
             skin.fRx -= 10;
           }
         }
@@ -468,7 +472,7 @@ function Skin(_fRx, _fRy, _fLength, _color, _fDiam, _fPrice, _isSpecial, _nSpeci
     }
   }
 
-  
+
   this.isClicked = function () {
     var fXDist = mouseX - fBx;
     var fYDist = mouseY - fBy;
@@ -488,7 +492,7 @@ var sText = "code", sInput = "Enter The Code";
 var font, Original;
 // p5.Image = img, imgCircle;
 //PFont Bold, Original;
-// String[] info;
+var info = [];
 // String [] arHighScore;
 // String sScore;
 // Animation explosion;
@@ -507,7 +511,7 @@ var nCoin = 0;
 var nCount;
 var fLoc;
 var isLeft, coinOn, isMuted = false;
-var cBack,cSpike// cBall ;
+var cBack, cSpike// cBall ;
 // ArrayList<Spike> alSpikes= new ArrayList<Spike>();
 // ArrayList<Integer> alLocs= new ArrayList<Integer>();
 var alSpikes = [];
@@ -547,7 +551,7 @@ function setup() {
   btnMute = new ButtonImg("data/soundicon.png", 500, 463, 60, 60);
   // imgCircle = loadImage("nocoinscircle.png");
 
-  // info = loadStrings("info.txt");
+   info = loadStrings("data/info.txt");
   // arHighScore = loadStrings("score.txt");
   nRad = 32;
   ball = new Ball(width / 2, height / 2, nRad * 2, nRad * 2);
@@ -682,6 +686,7 @@ function draw() {
   }
   if (nMode == 4) {
     if (nScore > nHighScore) {
+      nHighScore = nScore;
       //arHighScore[0] = str(nScore);
     }
     gameBackground();
@@ -886,7 +891,29 @@ function mousePressed() {
     }
   }
 }
+function touchStarted() {
+  if (nMode == 1) {
+    resetGame();
+    nMode = 3;
+    if (nFreeCoins != 23) {
+      nFreeCoins = 0;
+    }
+  }
+  if (nMode == 3) {
+    ball.fDy = -22;
+  }
+  if (nMode == 4) {
+    //saveStrings("score.txt", arHighScore);
+    //arHighScore = loadStrings("score.txt");
+    textSize(100);
+    nScore = 0;
+    ball.fX = width / 2;
+    ball.fY = height / 2;
+    nOpac = 0;
+    nMode = 1;
 
+  }
+}
 function keyPressed() {
   if (nMode == 1) {
     if (key == ' ') {
